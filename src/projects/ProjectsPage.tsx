@@ -14,10 +14,12 @@ function ProjectsPage() {
     });
     setProjects(updatedProjects);
   };
-  return(<Fragment>
-    <h1>Projects</h1>
-    <ProjectList projects={projects} onSave={saveProject} />
-  </Fragment>);
+  return (
+    <Fragment>
+      <h1>Projects</h1>
+      <ProjectList projects={projects} onSave={saveProject} />
+    </Fragment>
+  );
 }
 
 export default ProjectsPage;
