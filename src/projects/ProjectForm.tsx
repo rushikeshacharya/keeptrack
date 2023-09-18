@@ -1,26 +1,47 @@
-import React, { SyntheticEvent } from "react";
+import React, { SyntheticEvent,useState } from "react";
 import { Project } from "./Project";
 
 interface ProjectFormProps {
+  project: Project;
   onCancel: () => void;
   onSave(project: Project): void;
 }
 
-function ProjectForm({onCancel, onSave}: ProjectFormProps) {
+function ProjectForm({project: initialProject, onCancel, onSave}: ProjectFormProps) {
+  const [project, setProject] = useState(initialProject);
+
   const handleSubmit = (event:SyntheticEvent) => {
     event.preventDefault();
-    onSave(new Project({name: 'Updated Project'}));
+    onSave(project);
+  }
+
+  const handleChange = (event: any) => {
+    const {type, name, value, checked} = event.target;
+    let updatedValue = type === 'checkbox' ? checked : value;
+    if(type === 'number'){
+      updatedValue = Number(updatedValue);
+    }
+    const change = {
+      [name]: updatedValue
+    };
+
+    let updatedProject: Project;
+
+    setProject((p) => {
+      updatedProject = new Project({...p, ...change});
+      return updatedProject;
+    })
   }
   return (
     <form className="input-group vertical" onSubmit={handleSubmit}>
       <label htmlFor="name">Project Name</label>
-      <input type="text" name="name" placeholder="Enter Name" />
+      <input type="text" name="name" placeholder="Enter Name" value={project.name} onChange={handleChange}/>
       <label htmlFor="description">Project Description</label>
       <textarea name="description" placeholder="Enter Description" />
       <label htmlFor="budget">Project Budget</label>
-      <input type="number" name="budget" placeholder="Enter Budget" />
+      <input type="number" name="budget" placeholder="Enter Budget" value={project.budget} onChange={handleChange}/>
       <label htmlFor="isActive">Active?</label>
-      <input type="checkbox" name="isActive" />
+      <input type="checkbox" name="isActive" checked={project.isActive} onChange={handleChange}/>
       <div className="input-group">
         <button className="primary bordered medium">Save </button>
         <span />
